@@ -1,0 +1,103 @@
+<!-- TOOL HOÀN CHỈNH: COPY → index.html → DEPLOY VERCEL -->
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thử Thách 99%</title>
+
+<!-- META SHARE FACEBOOK -->
+<meta property="og:title" content="99% không qua nổi game này!">
+<meta property="og:description" content="Bạn thuộc top mấy %?">
+<meta property="og:image" content="https://i.imgur.com/7yUvePI.png">
+
+<style>
+body{margin:0;background:#000;color:#fff;text-align:center;font-family:sans-serif}
+canvas{background:#111;display:block;margin:auto}
+#ui{position:fixed;top:10px;width:100%;text-align:center;font-size:18px}
+#popup{
+position:fixed;top:0;left:0;right:0;bottom:0;
+background:rgba(0,0,0,0.95);
+display:none;flex-direction:column;justify-content:center;align-items:center
+}
+button{padding:12px 25px;font-size:18px;margin:10px}
+</style>
+</head>
+
+<body>
+
+<div id="ui">Score: <span id="score">0</span></div>
+<canvas id="game" width="400" height="600"></canvas>
+
+<div id="popup">
+<h2 id="rank"></h2>
+<button onclick="share()">Chia sẻ để mở kết quả</button>
+<button onclick="redirect()">Nhận quà 🎁</button>
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let player = {x:180,y:520,size:20};
+let obs=[], score=0, over=false;
+
+function spawn(){
+obs.push({x:Math.random()*380,y:-20,size:20});
+}
+
+function draw(){
+if(over) return;
+ctx.clearRect(0,0,400,600);
+
+ctx.fillStyle="lime";
+ctx.fillRect(player.x,player.y,20,20);
+
+ctx.fillStyle="red";
+obs.forEach(o=>{
+o.y+=6;
+ctx.fillRect(o.x,o.y,20,20);
+
+if(o.x<player.x+20 && o.x+20>player.x && o.y<player.y+20 && o.y+20>player.y){
+endGame();
+}
+});
+
+score++;
+document.getElementById("score").innerText=score;
+requestAnimationFrame(draw);
+}
+
+function endGame(){
+over=true;
+let percent = Math.floor(Math.random()*20)+80;
+document.getElementById("rank").innerText="Bạn top "+percent+"%";
+document.getElementById("popup").style.display="flex";
+}
+
+document.addEventListener("mousemove",e=>{
+player.x=e.clientX-20;
+});
+
+window.addEventListener("deviceorientation",e=>{
+player.x+=e.gamma*0.5;
+});
+
+setInterval(spawn,700);
+draw();
+
+/* SHARE VIRAL */
+function share(){
+navigator.clipboard.writeText(window.location.href);
+alert("Đã copy link! Dán lên Facebook để khoe kết quả!");
+}
+
+/* LINK KIẾM TIỀN (THAY LINK NÀY) */
+function redirect(){
+window.location.href="https://shopee.vn/";
+}
+</script>
+
+</body>
+</html>
